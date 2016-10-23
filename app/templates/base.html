@@ -9,6 +9,16 @@
 	<body>
 		<div>Microblog: <a href="/index">Home</a></div> 
 		<hr>
-		{% block content %} {% endblock %}<!-- This is where the block named "content" will appear -->
+		{% with messages = get_flashed_messages() %} <!-- This is a way of assigning a variable-->
+			{% if messages %} <!-- if there are any messages to display -->
+				<ul>
+				{% for message in messages %}
+					<li> {{ message }} </li>
+				{% endfor %}
+				</ul>
+		{% endif %}
+	{% endwith %}
+	
+	{% block content %} {% endblock %}<!-- This is where the block named "content" will appear -->
 	</body>
 </html>
