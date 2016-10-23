@@ -1,13 +1,38 @@
+<!-- This is the login page which houses the login form -->
+
 <!-- extend from base layout -->
 {% extends "base.html" %}
 
 {% block content %}
+	<script type="text/javascript">
+	// This function will handle the formatting of the URL
+	function set_openid(openid, pr) // function takes in an openid url and the provider name
+	{
+		// if there is a <username> in the openid url string then this needs to be replace with an actual username, if there isn't then the login will be handled by the url itself.
+		u = openid.search('<username>') // search for the index of the <username>
+		if (u != -1) { 
+			// openid requires username
+			user = prompt('Enter your ' + pr + ' username:') // prompt the user for the username associated with the specific provider
+			openid = openid.substr(0, u) + user // append the username to the openid string (excluding '<username>')
+		}
+		form = document.forms['login']; // create a variable set to the form (.forms) on the page (document) called 'login'
+		form.elements['openid'].value = openid // edit that form's openid url to the new url we just created
+	}
+	</script>
+	
 	<h1>Sign In</h1>
 	<form action="" method="post" name="login"> <!-- this is a post request named login -->
 		{{ form.hidden_tag() }} <!-- http://stackoverflow.com/questions/19612186/forms-contactform-object-has-no-attribute-hidden-tag -->
 		<p>
 			Please enter your OpenID:<br>
 			{{ form.openid(size=80) }}<br> <!-- displays the field called openid with a size of 80-->
+			{% for error in form.openid.errors %} <!-- searches through the error array returned from the textfield when page is rendered (in this case, after submit is pressed)-->
+				<!-- any field with attached validators will have errors -->
+				<span style="color: red;">[{{ error }}]</span>
+			{% endfor %}<br>
+			| {% for pr in providers %} <!-- each provider object is assigned to a pr; going to use the name and url of each-->
+				<a href ="javascript:set_openid('{{ pr.url}}', '{{ pr.name }}');">{{ pr.name }}</a> | <!-- Creates a set of links that passes the appropriate parameters to and executes the "set_openid" function when clicked -->
+			{% endfor %}
 		</p>
 		<p>{{ form.remember_me }} Remember Me</p> <!-- displays the checkbox -->
 		<p><input type="submit" value="Sign In"></p>

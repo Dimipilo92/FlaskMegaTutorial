@@ -7,7 +7,11 @@ from wtforms.validators import DataRequired
  # Data Required a validator, or a funciton that can be attached to a field to perform validation on the input
  # DataRequired checks to see if the form is empty
 
+
+
+# The LoginForm class groups the stringfield and booleanfield into something meaningful, the loginform class
+
 # class LoginForm(Form): # deprecated
-class LoginForm(Form): # groups the stringfield and booleanfield into something meaningful, the loginform class
+class LoginForm(Form): 
 	openid = StringField('openid', validators=[DataRequired()]) # adds only one validator to the Stringfield, which is that the data is required (more functions could be added to the array)
 	remember_me = BooleanField('remember_me', default=False) # gives the checkbox a name and sets the default state to false

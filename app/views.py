@@ -8,7 +8,6 @@ from flask import render_template, flash, redirect
 from app import app # from
 from .forms import LoginForm # imports the LoginForm class from forms.py
 
-
 # this handler will display index.html @ the index of the site (www.site.com/ and www.site.com/index) to display the html returned by the funtion
 @app.route('/') # this is a decorator (https://wiki.python.org/moin/PythonDecorators)
 @app.route('/index')
@@ -21,11 +20,15 @@ def index():
 		},
 		{
 			'author':{'nickname':'Aaron'},
-			'body':'Yeah dude. Just coding!'
+			'body':'Yeah dude. Just coding.'
 		},
 		{
 			'author':{'nickname':'David'},
 			'body':'Dimi! We gotta hang out.'
+		},
+		{
+			'author':{'nickname':'Shane'},
+			'body':'Hey, are you free next Saturday?'
 		}
 	]
 	return render_template("index.html", # the render_template function will return an html in the form of a string string, formatted using the templating engine jinja2
@@ -34,7 +37,7 @@ def index():
 											posts=posts)
 # alternatively you can just return an html string
 
-# this handler will display the form.html @ /login
+# this handler will display  login.html @ /login
 @app.route('/login', methods=['GET', 'POST']) # function accepts GET and POST requests, functions accept GET requests already by default
 def login():
 	form = LoginForm() # class created in forms.py
@@ -44,4 +47,5 @@ def login():
 		return (redirect('/index')) # redirect tells the site to login to a different page other than the current page (in this case '/index')
 	return render_template('login.html',
 										title='Sign In', 
-										form=form)
+										form=form,
+										providers=app.config['OPENID_PROVIDERS']) # retrieve profiders from config file
